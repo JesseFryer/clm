@@ -6,11 +6,16 @@
  *
  */
 
+#ifndef CLM_H
+#define CLM_H
+
 typedef float clmVec2[2];
 typedef float clmVec3[3];
 typedef float clmVec4[4];
 typedef float clmMat3[9];
 typedef float clmMat4[16];
+
+#define PI 3.14159265359
 
 /* clm_v2_dot_product
  * ------------------
@@ -67,10 +72,15 @@ float clm_v3_length(clmVec3 v);
 void clm_v3_cross_product(clmVec3 v1, clmVec3 v2, 
         clmVec3 result);
 
+/* clm_v3_normalize
+ * ----------------
+ * Normalize vector v.
+ */
+void clm_v3_normalize(clmVec3 v);
+
 /* clm_mat4_mul
  * ------------
- * Compute  mat1 x mat2, result overwrites
- * mat1.
+ * Compute  mat1 x mat2, stores result in mat1.
  */
 void clm_mat4_multiply(clmMat4 mat1, clmMat4 mat2);
 
@@ -90,8 +100,41 @@ void clm_mat4_identity(clmMat4 mat);
  * ------------------
  * Adds the translation from translate to transform.
  */
-void clm_mat4_translate(clmMat4 transform, 
+void clm_mat4_translate(clmMat4 trans, 
         clmVec3 translate);
+
+/* clm_mat4_rotate
+ * ---------------
+ * Adds rad radians rotation to trans along the unit 
+ * vector axis. axis is assumed to be a unit vector.
+ */
+void clm_mat4_rotate(clmMat4 trans,
+        float rad, clmVec3 axis);
+
+/* clm_mat4_scale
+ * --------------
+ * Adds a scale transformation to trans.
+ */
+void clm_mat4_scale(clmMat4 trans, clmVec3 scale);
+
+/* clm_mat4_perspective
+ * --------------------
+ * Store the perspective projection matrix in proj.
+ */
+void clm_mat4_perspective(clmMat4 proj, 
+        float fov, 
+        float aspectRatio, 
+        float near, 
+        float far);
+
+/* clm_mat4_lookat
+ * ---------------
+ * Store the lookat view matrix in lookat.
+ */
+void clm_mat4_lookat(clmMat4 lookat,
+        clmVec3 position,
+        clmVec3 target,
+        clmVec3 up);
 
 /* clm_mat4_print
  * --------------
@@ -116,3 +159,5 @@ void clm_v3_print(clmVec3 v);
  * print v in a readable format.
  */
 void clm_v4_print(clmVec4 v);
+
+#endif
