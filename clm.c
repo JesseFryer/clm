@@ -1,5 +1,6 @@
 #include "clm.h"
 #include <math.h>
+#include <stdio.h>
 
 float clm_radians(float deg) {
     return deg * (PI / 180.0f);
