@@ -2,20 +2,36 @@
  *
  * clm.h
  *
- * For use in OpenGL projects using C.
+ * Tailored for OpenGL projects using C.
  *
+ * Written by Jesse Fryer
  */
 
-#ifndef CLM_H
-#define CLM_H
+#pragma once
 
-typedef float clmVec2[2];
-typedef float clmVec3[3];
-typedef float clmVec4[4];
-typedef float clmMat3[9];
-typedef float clmMat4[16];
+typedef struct {
+    float x;
+    float y;
+} clmVec2;
 
-#define PI 3.14159265359f
+typedef struct {
+    float x;
+    float y;
+    float z;
+} clmVec3;
+
+typedef struct {
+    float r;
+    float g;
+    float b;
+    float a;
+} clmVec4;
+
+typedef struct {
+    float mat[16];
+} clmMat4;
+
+#define CLM_PI 3.141592653589793238
 
 /* clm_radians
  * -----------
@@ -27,7 +43,7 @@ float clm_radians(float deg);
  * ------------------
  * Returns the dot product of v1 and v2.
  */
-float clm_v2_dot_product(clmVec2 v1, clmVec2 v2);
+float clm_v2_dot(clmVec2 v1, clmVec2 v2);
 
 /* clm_v3_dot_product
  * ------------------
@@ -37,97 +53,107 @@ float clm_v3_dot_product(clmVec3 v1, clmVec3 v2);
 
 /* clm_v2_add
  * ----------
- * Add two vectors, resultant vector is stored in result.
+ * Returns a new clmVec2 which is v1 + v2
  */
-void clm_v2_add(clmVec2 v1, clmVec2 v2, clmVec2 result);
+clmVec2 clm_v2_add(clmVec2 v1, clmVec2 v2);
 
 /* clm_v3_add
  * ----------
- * Add two vectors, resultant vector is stored in result.
+ * Returns a new clmVec3 which is v1 + v2
  */
-void clm_v3_add(clmVec3 v1, clmVec3 v2, clmVec3 result);
+clmVec3 clm_v3_add(clmVec3 v1, clmVec3 v2);
 
-/* clm_v2_scalar_multiply
- * ----------------------
- * Multiply v by scalar, overwrites vector v.
+/* clm_v2_scalar_mul
+ * -----------------
+ * Returns a new clmVec2 which is scalar * v
  */
-void clm_v2_scalar_multiply(float scalar, clmVec2 v);
+clmVec2 clm_v2_scalar_mul(float scalar, clmVec2 v);
 
 /* clm_v3_scalar_multiply
  * ----------------------
- * Multiply v by scalar, overwrites vector v.
+ * Returns a new clmVec3 which is scalar * v
  */
-void clm_v3_scalar_multiply(float scalar, clmVec3 v);
+clmVec3 clm_v3_scalar_mul(float scalar, clmVec3 v);
 
 /* clm_v2_length
  * -------------
  * Returns the length of vector v.
  */
-float clm_v2_length(clmVec2 v);
+float clm_v2_len(clmVec2 v);
 
 /* clm_v3_length
  * -------------
  * Returns the length of vector v.
  */
-float clm_v3_length(clmVec3 v);
+float clm_v3_len(clmVec3 v);
 
-/* clm_v3_cross_product
- * --------------------
- * Stores the orthogonal vector to v1 and v2 in result.
+/* clm_v2_normalize
+ * ----------------
+ * Return normalized v.
  */
-void clm_v3_cross_product(clmVec3 v1, clmVec3 v2, 
-        clmVec3 result);
+clmVec2 clm_v2_normalize(clmVec2 v);
 
 /* clm_v3_normalize
  * ----------------
- * Normalize vector v.
+ * Return normalized v.
  */
-void clm_v3_normalize(clmVec3 v);
+clmVec3 clm_v3_normalize(clmVec3 v);
+
+/* clm_v3_cross_product
+ * --------------------
+ * Returns a new clmVec3 which is the cross product 
+ * of v1 and v2.
+ */
+clmVec3 clm_v3_cross(clmVec3 v1, clmVec3 v2);
 
 /* clm_mat4_mul
  * ------------
  * Compute  mat1 x mat2, stores result in mat1.
  */
-void clm_mat4_multiply(clmMat4 mat1, clmMat4 mat2);
+clmMat4 clm_mat4_mul_mat4(clmMat4 mat1, clmMat4 mat2);
 
 /* clm_mat4_multiply_v4
  * --------------------
- * Compute mat x v, stores result in v.
+ * Returns new clmVec4 which is mat x v
  */
-void clm_mat4_multiply_v4(clmMat4 mat, clmVec4 v);
+clmVec4 clm_mat4_mul_v4(clmMat4 mat, clmVec4 v);
 
 /* clm_mat4_identity
  * -----------------
- * Sets mat to be the identity matrix.
+ * Returns a new clmMat4 which is the identity matrix.
  */
-void clm_mat4_identity(clmMat4 mat);
+clmMat4 clm_mat4_identity();
 
 /* clm_mat4_translate
  * ------------------
- * Adds the translation from translate to transform.
+ * Returns new mat4 which is transform with translation 
+ * added to it.
  */
-void clm_mat4_translate(clmMat4 trans, 
-        clmVec3 translate);
+clmMat4 clm_mat4_translate(
+        clmMat4 transform, 
+        clmVec3 translation);
 
 /* clm_mat4_rotate
  * ---------------
- * Adds rad radians rotation to trans along the unit 
- * vector axis. axis is assumed to be a unit vector.
+ * Returns a new clmMat4 with a rotation to trans along axis. 
  */
-void clm_mat4_rotate(clmMat4 trans,
-        float rad, clmVec3 axis);
+clmMat4 clm_mat4_rotate(
+        clmMat4 trans,
+        float   degrees,
+        clmVec3 axis);
 
 /* clm_mat4_scale
  * --------------
- * Adds a scale transformation to trans.
+ * Returns a new clmMat4 which is trans scaled by scale.
  */
-void clm_mat4_scale(clmMat4 trans, clmVec3 scale);
+clmMat4 clm_mat4_scale(clmMat4 trans, clmVec3 scale);
 
 /* clm_mat4_perspective
  * --------------------
- * Store the perspective projection matrix in proj.
+ * Returns a new clmMat4 which is the perspective projection
+ * matrix.
  */
-void clm_mat4_perspective(clmMat4 proj, 
+clmMat4 clm_mat4_perspective(
         float fov, 
         float aspectRatio, 
         float near, 
@@ -135,35 +161,33 @@ void clm_mat4_perspective(clmMat4 proj,
 
 /* clm_mat4_lookat
  * ---------------
- * Store the lookat view matrix in lookat.
+ * Returns a new clmMat4 which is the lookat matrix.
  */
-void clm_mat4_lookat(clmMat4 lookat,
+clmMat4 clm_mat4_lookat(
         clmVec3 position,
         clmVec3 target,
         clmVec3 up);
 
 /* clm_mat4_print
  * --------------
- * print mat in a readable format.
+ * print mat to 2 decimals points accuracy
  */
 void clm_mat4_print(clmMat4 mat);
 
 /* clm_vec2_print
  * --------------
- * print v in a readable format.
+ * print v to 4 decimals points accuracy
  */
 void clm_v2_print(clmVec2 v);
 
 /* clm_vec3_print
  * --------------
- * print v in a readable format.
+ * print v to 4 decimals points accuracy
  */
 void clm_v3_print(clmVec3 v);
 
 /* clm_vec4_print
  * --------------
- * print v in a readable format.
+ * print v to 4 decimals points accuracy
  */
 void clm_v4_print(clmVec4 v);
-
-#endif
